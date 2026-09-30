@@ -9,6 +9,6 @@
         </div>
     </footer>
 
-    <script src="<?php echo SITE_URL; ?>js/main.js?v=1.1"></script>
+    <script src="<?php echo SITE_URL; ?>js/main.js?v=1.2"></script>
 </body>
 </html>

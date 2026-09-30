@@ -7,11 +7,12 @@ $showReview = !empty($f);
 <div class="content-container">
     <?php if (!$aiConfigured): ?>
     <div class="alert alert-warning alert-static">
-        尚未設定 OpenAI API 金鑰，目前無法使用 AI 辨識。
-        <?php if (($_SESSION['role'] ?? '') === USER_ROLE_ADMIN): ?>
-            請至 <a href="<?php echo SITE_URL; ?>index.php?controller=settings&action=index">AI 設定</a> 貼上金鑰。
+        <?php if (DEMO_MODE): ?>
+            示範站未開放 AI 語音／拍照辨識。想實際試用，可從 GitHub 下載本系統，或用 Codespaces 建立自己的環境並設定 OpenAI 金鑰。
+        <?php elseif (($_SESSION['role'] ?? '') === USER_ROLE_ADMIN): ?>
+            尚未設定 OpenAI API 金鑰，目前無法使用 AI 辨識。請至 <a href="<?php echo SITE_URL; ?>index.php?controller=settings&action=index">AI 設定</a> 貼上金鑰。
         <?php else: ?>
-            請聯絡系統管理員至「AI 設定」頁面設定金鑰。
+            尚未設定 OpenAI API 金鑰，目前無法使用 AI 辨識。請聯絡系統管理員至「AI 設定」頁面設定金鑰。
         <?php endif; ?>
         需要手動記帳時，請使用「日記帳」→「新增日記帳」。
     </div>

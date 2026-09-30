@@ -289,3 +289,13 @@
 .detail-value {
     color: #6b7280;
 }
+
+/* 示範站提示 */
+.demo-banner {
+    background: #fef3c7;
+    color: #92400e;
+    border-bottom: 1px solid #fcd34d;
+    padding: 10px 20px;
+    text-align: center;
+    font-size: 14px;
+}

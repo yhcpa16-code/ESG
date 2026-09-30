@@ -131,8 +131,8 @@
         <?php if (SHOW_DEMO_ACCOUNT): ?>
         <div class="demo-info">
             <strong>演示帳號：</strong>
-            帳號：admin<br>
-            密碼：admin123
+            帳號：<?php echo htmlspecialchars(DEMO_USERNAME); ?><br>
+            密碼：<?php echo htmlspecialchars(DEMO_PASSWORD); ?>
         </div>
         <?php endif; ?>
 

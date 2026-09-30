@@ -1,0 +1,27 @@
+services:
+  app:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    volumes:
+      - ..:/workspace:cached
+    working_dir: /workspace
+    command: php -S 0.0.0.0:8080 -t /workspace
+    depends_on:
+      - db
+
+  db:
+    image: mariadb:11
+    restart: unless-stopped
+    environment:
+      MARIADB_ROOT_PASSWORD: codespace-root
+      MARIADB_DATABASE: accounting_system
+      MARIADB_USER: app
+      MARIADB_PASSWORD: app
+      MARIADB_CHARACTER_SET_SERVER: utf8mb4
+      MARIADB_COLLATION_SERVER: utf8mb4_unicode_ci
+    volumes:
+      - db-data:/var/lib/mysql
+
+volumes:
+  db-data:

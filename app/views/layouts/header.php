@@ -4,8 +4,8 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title><?php echo isset($pageTitle) ? $pageTitle . ' - ' . SITE_NAME : SITE_NAME; ?></title>
-    <link rel="stylesheet" href="<?php echo SITE_URL; ?>css/style.css?v=1.1">
-    <link rel="stylesheet" href="<?php echo SITE_URL; ?>css/layout.css?v=1.1">
+    <link rel="stylesheet" href="<?php echo SITE_URL; ?>css/style.css?v=1.2">
+    <link rel="stylesheet" href="<?php echo SITE_URL; ?>css/layout.css?v=1.2">
 </head>
 <body>
     <div class="container-fluid">
@@ -54,6 +54,10 @@
                 </div>
             </div>
         </nav>
+
+        <?php if (DEMO_MODE): ?>
+        <div class="demo-banner">這是公開示範站：資料每天自動重置為範例資料，AI 語音／拍照辨識未開放。</div>
+        <?php endif; ?>
 
         <!-- 頁面內容 -->
         <div class="main-content">

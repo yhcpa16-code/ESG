@@ -1,7 +1,14 @@
 # 會計帳務管理系統
 
-![Version](https://img.shields.io/badge/version-1.0-blue)
-![License](https://img.shields.io/badge/license-MIT-green)
+![Version](https://img.shields.io/badge/version-1.2-blue)
+
+[![Open in GitHub Codespaces](https://github.com/codespaces/badge.svg)](https://codespaces.new/yhcpa16-code/ESG)
+
+| | 網址 |
+|---|---|
+| 系統介紹頁 | https://yhcpa16-code.github.io/ESG/ |
+| 線上示範站 | https://darksalmon-eagle-978314.hostingersite.com/andy111415165/demo/ （帳號 `demo`／密碼 `demo1234`，資料每天重置，未開放 AI） |
+| 一鍵雲端執行 | 按上方「Open in GitHub Codespaces」，約 2～3 分鐘後開啟 8080 連接埠（管理員 `admin`／`admin123`） |
 
 ## 📋 系統概述
 
@@ -257,7 +264,7 @@ accounting_system/
 
 ## ⚖️ 開源許可
 
-本項目採用MIT許可證。詳見LICENSE文件。
+尚未指定開源授權條款；如需他人使用或修改，請由專案擁有者新增 LICENSE 檔案。
 
 ## 🙏 致謝
 

@@ -1,0 +1,184 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>會計帳務管理系統</title>
+<meta name="description" content="以 PHP + MySQL 開發的基本會計帳務系統，支援 AI 語音與拍照記帳。可線上試用或在 GitHub Codespaces 一鍵執行。">
+<style>
+:root {
+  --bg: #f7f8fb;
+  --surface: #ffffff;
+  --text: #1f2937;
+  --muted: #5b6474;
+  --border: #e3e6ee;
+  --accent: #4f46e5;
+  --accent-text: #ffffff;
+  --accent-soft: #eef0ff;
+  --code-bg: #f1f3f8;
+}
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) {
+    --bg: #11131a;
+    --surface: #1a1d27;
+    --text: #e8eaf0;
+    --muted: #a3aabb;
+    --border: #2c3140;
+    --accent: #8b87ff;
+    --accent-text: #11131a;
+    --accent-soft: #252846;
+    --code-bg: #232736;
+  }
+}
+:root[data-theme="dark"] {
+  --bg: #11131a;
+  --surface: #1a1d27;
+  --text: #e8eaf0;
+  --muted: #a3aabb;
+  --border: #2c3140;
+  --accent: #8b87ff;
+  --accent-text: #11131a;
+  --accent-soft: #252846;
+  --code-bg: #232736;
+}
+* { box-sizing: border-box; margin: 0; padding: 0; }
+body {
+  background: var(--bg);
+  color: var(--text);
+  font-family: "Segoe UI", "Microsoft JhengHei", "PingFang TC", "Noto Sans TC", sans-serif;
+  line-height: 1.7;
+}
+.wrap { max-width: 1040px; margin: 0 auto; padding: 0 16px; }
+header.hero { padding: 72px 0 56px; border-bottom: 1px solid var(--border); }
+.eyebrow { color: var(--accent); font-weight: 600; font-size: 14px; letter-spacing: .04em; }
+h1 { font-size: clamp(30px, 5vw, 44px); line-height: 1.25; margin: 10px 0 16px; }
+.lead { color: var(--muted); font-size: 18px; max-width: 680px; }
+.actions { display: flex; flex-wrap: wrap; gap: 12px; margin-top: 28px; }
+.btn {
+  display: inline-block; padding: 12px 20px; border-radius: 8px; font-weight: 600;
+  text-decoration: none; border: 1px solid var(--border); color: var(--text); background: var(--surface);
+}
+.btn.primary { background: var(--accent); border-color: var(--accent); color: var(--accent-text); }
+.btn:hover { filter: brightness(1.05); }
+.demo-note {
+  margin-top: 20px; padding: 14px 16px; border-radius: 8px; background: var(--accent-soft);
+  font-size: 15px; max-width: 680px;
+}
+code { background: var(--code-bg); padding: 2px 6px; border-radius: 4px; font-family: Consolas, "Courier New", monospace; font-size: .92em; }
+section { padding: 56px 0; border-bottom: 1px solid var(--border); }
+h2 { font-size: 26px; margin-bottom: 8px; }
+.section-lead { color: var(--muted); margin-bottom: 28px; }
+.grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); gap: 16px; }
+.card { background: var(--surface); border: 1px solid var(--border); border-radius: 10px; padding: 20px; }
+.card h3 { font-size: 17px; margin-bottom: 6px; }
+.card p { color: var(--muted); font-size: 15px; }
+.tag { display: inline-block; font-size: 12px; font-weight: 600; color: var(--accent); background: var(--accent-soft); padding: 2px 8px; border-radius: 999px; margin-bottom: 8px; }
+.steps { counter-reset: step; display: grid; gap: 14px; }
+.steps li { list-style: none; counter-increment: step; position: relative; padding-left: 40px; }
+.steps li::before {
+  content: counter(step); position: absolute; left: 0; top: 2px; width: 26px; height: 26px; border-radius: 50%;
+  background: var(--accent); color: var(--accent-text); font-weight: 700; font-size: 14px; display: grid; place-items: center;
+}
+table { width: 100%; border-collapse: collapse; background: var(--surface); border: 1px solid var(--border); border-radius: 10px; overflow: hidden; }
+th, td { text-align: left; padding: 12px 14px; border-bottom: 1px solid var(--border); font-size: 15px; vertical-align: top; }
+th { width: 30%; color: var(--muted); font-weight: 600; }
+tr:last-child th, tr:last-child td { border-bottom: none; }
+footer { padding: 36px 0 48px; color: var(--muted); font-size: 14px; text-align: center; }
+footer .firm { color: var(--text); font-weight: 600; font-size: 15px; margin-bottom: 4px; }
+@media (max-width: 600px) {
+  header.hero { padding: 48px 0 40px; }
+  th { width: 38%; }
+  .btn { width: 100%; text-align: center; }
+}
+</style>
+</head>
+<body>
+
+<header class="hero">
+  <div class="wrap">
+    <div class="eyebrow">開源專案 · PHP + MySQL</div>
+    <h1>會計帳務管理系統</h1>
+    <p class="lead">為中小企業與會計事務所設計的基本帳務系統：會計科目、日記帳、分類帳、試算表與財務報表一次到位，並可用 AI 語音或拍攝發票快速產生分錄草稿，經人工覆核後過帳。</p>
+    <div class="actions">
+      <a class="btn primary" href="https://darksalmon-eagle-978314.hostingersite.com/andy111415165/demo/">線上試用示範站</a>
+      <a class="btn" href="https://codespaces.new/yhcpa16-code/ESG">在 Codespaces 一鍵執行</a>
+      <a class="btn" href="https://github.com/yhcpa16-code/ESG">查看 GitHub 原始碼</a>
+    </div>
+    <p class="demo-note">示範帳號：<code>demo</code>　密碼：<code>demo1234</code><br>示範站資料每天自動重置為範例資料，AI 辨識功能不開放；要試用 AI，請使用 Codespaces 或自行安裝。</p>
+  </div>
+</header>
+
+<main>
+  <section>
+    <div class="wrap">
+      <h2>主要功能</h2>
+      <p class="section-lead">依《系統規格書》開發，涵蓋日常記帳到月底報表的完整流程。</p>
+      <div class="grid">
+        <div class="card"><h3>會計科目管理</h3><p>資產、負債、權益、收入、費用五大類科目，依正常餘額方向顯示科目餘額。</p></div>
+        <div class="card"><h3>日記帳</h3><p>一借一貸分錄、憑證號自動編碼，過帳時以資料庫交易同步更新科目餘額。</p></div>
+        <div class="card"><h3>分類帳</h3><p>依科目逐筆列出交易與累計餘額，方便追查每一筆金額的來源。</p></div>
+        <div class="card"><h3>試算表</h3><p>自動彙總借方與貸方合計並驗證是否平衡。</p></div>
+        <div class="card"><h3>財務報表</h3><p>資產負債表（含本期損益）、損益表（可選期間）與科目餘額表。</p></div>
+        <div class="card"><span class="tag">AI</span><h3>語音／拍照記帳</h3><p>透過 OpenAI 辨識口述內容或發票照片，依既有科目產生分錄草稿，人工確認後才過帳。</p></div>
+      </div>
+    </div>
+  </section>
+
+  <section>
+    <div class="wrap">
+      <h2>三種使用方式</h2>
+      <p class="section-lead">不需安裝就能先看看，想完整試用也只要按一下。</p>
+      <div class="grid">
+        <div class="card">
+          <h3>1. 線上示範站</h3>
+          <p>直接在瀏覽器操作，內含九月份範例交易。以 <code>demo / demo1234</code> 登入。</p>
+        </div>
+        <div class="card">
+          <h3>2. GitHub Codespaces</h3>
+          <p>登入 GitHub 後按「在 Codespaces 一鍵執行」，約 2～3 分鐘自動建好 PHP + MariaDB 與範例資料，完成後開啟 8080 連接埠。管理員 <code>admin / admin123</code>，可在「AI 設定」貼上自己的 OpenAI 金鑰。</p>
+        </div>
+        <div class="card">
+          <h3>3. 自行安裝（XAMPP）</h3>
+          <p>下載原始碼放到 <code>htdocs</code>，以 utf8mb4 匯入 <code>database/init.sql</code>，開啟 <code>/public/</code> 即可。詳見 GitHub 上的安裝說明。</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section>
+    <div class="wrap">
+      <h2>技術規格</h2>
+      <p class="section-lead">簡單、好部署，共享主機也能執行。</p>
+      <table>
+        <tr><th>後端</th><td>PHP 8（MVC 架構、PDO 參數化查詢）</td></tr>
+        <tr><th>資料庫</th><td>MySQL / MariaDB（utf8mb4），支援資料表前綴，可與其他系統共用資料庫</td></tr>
+        <tr><th>前端</th><td>HTML、CSS、原生 JavaScript，支援手機操作</td></tr>
+        <tr><th>AI 服務</th><td>OpenAI 語音轉文字與影像辨識、JSON Schema 結構化輸出</td></tr>
+        <tr><th>安全性</th><td>BCrypt 密碼、CSRF 保護、輸出編碼防 XSS、機密目錄禁止存取、審計日誌</td></tr>
+      </table>
+    </div>
+  </section>
+
+  <section>
+    <div class="wrap">
+      <h2>AI 記帳如何運作</h2>
+      <p class="section-lead">AI 只負責產生草稿，最終過帳一定由人確認。</p>
+      <ol class="steps">
+        <li>作業人員在手機或電腦上錄音口述交易，或拍攝發票、收據。</li>
+        <li>系統把內容與科目清單交給 OpenAI，取得日期、借貸科目、金額與摘要。</li>
+        <li>伺服器再次驗證科目、金額與日期，無法確認的欄位會清空並提醒。</li>
+        <li>作業人員核對並修改草稿，按「確認過帳」後才寫入帳務。</li>
+      </ol>
+    </div>
+  </section>
+</main>
+
+<footer>
+  <div class="wrap">
+    <p class="firm">宥鋐會計師事務所</p>
+    <p>會計帳務管理系統 · <a href="https://github.com/yhcpa16-code/ESG" style="color: inherit;">GitHub</a></p>
+  </div>
+</footer>
+
+</body>
+</html>

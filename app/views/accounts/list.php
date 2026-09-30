@@ -28,8 +28,8 @@
                             $types = ['asset' => '資產', 'liability' => '負債', 'equity' => '權益', 'revenue' => '收入', 'expense' => '支出'];
                             echo $types[$account['account_type']] ?? $account['account_type'];
                         ?></td>
-                        <td class="text-right"><?php echo CURRENCY_SYMBOL . number_format($account['balance'], DECIMAL_PLACES); ?></td>
-                        <td><?php echo htmlspecialchars(substr($account['description'], 0, 30)); ?></td>
+                        <td class="text-right"><?php echo APP_CURRENCY_SYMBOL . number_format($account['natural_balance'], DECIMAL_PLACES); ?></td>
+                        <td><?php echo htmlspecialchars(mb_substr((string)$account['description'], 0, 30)); ?></td>
                         <td>
                             <a href="<?php echo SITE_URL; ?>index.php?controller=account&action=edit&id=<?php echo $account['account_id']; ?>" class="btn-small">編輯</a>
                             <a href="<?php echo SITE_URL; ?>index.php?controller=account&action=delete&id=<?php echo $account['account_id']; ?>" class="btn-small btn-danger" onclick="return confirm('確定要刪除此科目嗎?');">刪除</a>

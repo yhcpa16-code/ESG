@@ -30,11 +30,11 @@ class ReportController {
         $total_debit = 0;
         $total_credit = 0;
 
-        foreach ($accounts as &$account) {
-            if (in_array($account['account_type'], ['asset', 'expense'])) {
-                $total_debit += $account['balance'];
+        foreach ($accounts as $account) {
+            if (Account::isDebitNature($account['account_type'])) {
+                $total_debit += $account['natural_balance'];
             } else {
-                $total_credit += $account['balance'];
+                $total_credit += $account['natural_balance'];
             }
         }
 
@@ -76,35 +76,30 @@ class ReportController {
         $revenue_accounts = $this->accountModel->getByType('revenue');
         $expense_accounts = $this->accountModel->getByType('expense');
 
-        $total_revenue = 0;
-        $total_expense = 0;
-
-        foreach ($revenue_accounts as &$account) {
-            $entries = $this->journalModel->getByDateRange($start_date, $end_date);
-            $account_total = 0;
-            foreach ($entries as $entry) {
-                if ($entry['credit_account'] == $account['account_id']) {
-                    $account_total += $entry['amount'];
-                } elseif ($entry['debit_account'] == $account['account_id']) {
-                    $account_total -= $entry['amount'];
-                }
-            }
-            $account['period_amount'] = $account_total;
-            $total_revenue += $account_total;
-        }
-
-        foreach ($expense_accounts as &$account) {
-            $entries = $this->journalModel->getByDateRange($start_date, $end_date);
-            $account_total = 0;
+        $entries = $this->journalModel->getByDateRange($start_date, $end_date);
+        $periodAmount = function ($account) use ($entries) {
+            $sign = Account::isDebitNature($account['account_type']) ? 1 : -1;
+            $total = 0;
             foreach ($entries as $entry) {
                 if ($entry['debit_account'] == $account['account_id']) {
-                    $account_total += $entry['amount'];
+                    $total += $sign * $entry['amount'];
                 } elseif ($entry['credit_account'] == $account['account_id']) {
-                    $account_total -= $entry['amount'];
+                    $total -= $sign * $entry['amount'];
                 }
             }
-            $account['period_amount'] = $account_total;
-            $total_expense += $account_total;
+            return $total;
+        };
+
+        $total_revenue = 0;
+        foreach ($revenue_accounts as $i => $account) {
+            $revenue_accounts[$i]['period_amount'] = $periodAmount($account);
+            $total_revenue += $revenue_accounts[$i]['period_amount'];
+        }
+
+        $total_expense = 0;
+        foreach ($expense_accounts as $i => $account) {
+            $expense_accounts[$i]['period_amount'] = $periodAmount($account);
+            $total_expense += $expense_accounts[$i]['period_amount'];
         }
 
         $net_income = $total_revenue - $total_expense;
@@ -121,20 +116,12 @@ class ReportController {
         $liability_accounts = $this->accountModel->getByType('liability');
         $equity_accounts = $this->accountModel->getByType('equity');
 
-        $total_assets = 0;
-        foreach ($asset_accounts as &$account) {
-            $total_assets += $account['balance'];
-        }
-
-        $total_liabilities = 0;
-        foreach ($liability_accounts as &$account) {
-            $total_liabilities += $account['balance'];
-        }
-
-        $total_equity = 0;
-        foreach ($equity_accounts as &$account) {
-            $total_equity += $account['balance'];
-        }
+        $sum = fn($accounts) => array_sum(array_column($accounts, 'natural_balance'));
+        $total_assets = $sum($asset_accounts);
+        $total_liabilities = $sum($liability_accounts);
+        // 尚未結帳前，本期損益（收入－費用）屬於權益的一部分
+        $current_income = $sum($this->accountModel->getByType('revenue')) - $sum($this->accountModel->getByType('expense'));
+        $total_equity = $sum($equity_accounts) + $current_income;
 
         $pageTitle = '資產負債表';
         include SITE_ROOT . '/app/views/reports/balance_sheet.php';

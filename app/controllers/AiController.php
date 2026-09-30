@@ -21,7 +21,7 @@ class AiController {
     public function index($form = null) {
         $accounts = $this->accountModel->getAll();
         $voucher_no = $form['voucher_no'] ?? $this->journalModel->generateVoucherNo();
-        $aiConfigured = OPENAI_API_KEY !== '';
+        $aiConfigured = OPENAI_API_KEY !== '' && !DEMO_MODE;
         $maxUploadMb = AI_MAX_UPLOAD_BYTES / 1024 / 1024;
         $errors = $this->errors;
         $pageTitle = 'AI 語音／拍照記帳';
@@ -34,6 +34,9 @@ class AiController {
 
         if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
             $this->jsonError('請使用 POST 上傳檔案', 405);
+        }
+        if (DEMO_MODE) {
+            $this->jsonError('示範站未開放 AI 辨識', 403);
         }
 
         $sourceType = $_POST['source_type'] ?? '';

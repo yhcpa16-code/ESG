@@ -15,14 +15,14 @@
                             <?php foreach ($asset_accounts as $account): ?>
                             <tr>
                                 <td><?php echo htmlspecialchars($account['account_code'] . ' ' . $account['account_name']); ?></td>
-                                <td class="text-right"><?php echo CURRENCY_SYMBOL . number_format($account['balance'], DECIMAL_PLACES); ?></td>
+                                <td class="text-right"><?php echo APP_CURRENCY_SYMBOL . number_format($account['natural_balance'], DECIMAL_PLACES); ?></td>
                             </tr>
                             <?php endforeach; ?>
                         </tbody>
                         <tfoot>
                             <tr style="font-weight: bold; border-top: 2px solid #333;">
                                 <td>總資產</td>
-                                <td class="text-right"><?php echo CURRENCY_SYMBOL . number_format($total_assets, DECIMAL_PLACES); ?></td>
+                                <td class="text-right"><?php echo APP_CURRENCY_SYMBOL . number_format($total_assets, DECIMAL_PLACES); ?></td>
                             </tr>
                         </tfoot>
                     </table>
@@ -38,12 +38,12 @@
                             <?php foreach ($liability_accounts as $account): ?>
                             <tr>
                                 <td style="padding-left: 20px;"><?php echo htmlspecialchars($account['account_code'] . ' ' . $account['account_name']); ?></td>
-                                <td class="text-right"><?php echo CURRENCY_SYMBOL . number_format($account['balance'], DECIMAL_PLACES); ?></td>
+                                <td class="text-right"><?php echo APP_CURRENCY_SYMBOL . number_format($account['natural_balance'], DECIMAL_PLACES); ?></td>
                             </tr>
                             <?php endforeach; ?>
                             <tr style="font-weight: bold; background: #f9f9f9;">
                                 <td style="padding-left: 20px;">負債小計</td>
-                                <td class="text-right"><?php echo CURRENCY_SYMBOL . number_format($total_liabilities, DECIMAL_PLACES); ?></td>
+                                <td class="text-right"><?php echo APP_CURRENCY_SYMBOL . number_format($total_liabilities, DECIMAL_PLACES); ?></td>
                             </tr>
 
                             <tr style="font-weight: bold; background: #f9f9f9;">
@@ -52,30 +52,34 @@
                             <?php foreach ($equity_accounts as $account): ?>
                             <tr>
                                 <td style="padding-left: 20px;"><?php echo htmlspecialchars($account['account_code'] . ' ' . $account['account_name']); ?></td>
-                                <td class="text-right"><?php echo CURRENCY_SYMBOL . number_format($account['balance'], DECIMAL_PLACES); ?></td>
+                                <td class="text-right"><?php echo APP_CURRENCY_SYMBOL . number_format($account['natural_balance'], DECIMAL_PLACES); ?></td>
                             </tr>
                             <?php endforeach; ?>
+                            <tr>
+                                <td style="padding-left: 20px;">本期損益（收入－費用，尚未結轉）</td>
+                                <td class="text-right"><?php echo APP_CURRENCY_SYMBOL . number_format($current_income, DECIMAL_PLACES); ?></td>
+                            </tr>
                             <tr style="font-weight: bold; background: #f9f9f9;">
                                 <td style="padding-left: 20px;">權益小計</td>
-                                <td class="text-right"><?php echo CURRENCY_SYMBOL . number_format($total_equity, DECIMAL_PLACES); ?></td>
+                                <td class="text-right"><?php echo APP_CURRENCY_SYMBOL . number_format($total_equity, DECIMAL_PLACES); ?></td>
                             </tr>
                         </tbody>
                         <tfoot>
                             <tr style="font-weight: bold; border-top: 2px solid #333;">
                                 <td>負債與權益合計</td>
-                                <td class="text-right"><?php echo CURRENCY_SYMBOL . number_format($total_liabilities + $total_equity, DECIMAL_PLACES); ?></td>
+                                <td class="text-right"><?php echo APP_CURRENCY_SYMBOL . number_format($total_liabilities + $total_equity, DECIMAL_PLACES); ?></td>
                             </tr>
                         </tfoot>
                     </table>
                 </div>
 
-                <?php if ($total_assets == $total_liabilities + $total_equity): ?>
+                <?php if (abs($total_assets - ($total_liabilities + $total_equity)) < 0.005): ?>
                 <div class="alert alert-success" style="margin-top: 20px;">
                     ✓ 資產等於負債加權益（平衡）
                 </div>
                 <?php else: ?>
                 <div class="alert alert-danger" style="margin-top: 20px;">
-                    ✗ 不平衡！差額：<?php echo CURRENCY_SYMBOL . number_format(abs($total_assets - ($total_liabilities + $total_equity)), DECIMAL_PLACES); ?>
+                    ✗ 不平衡！差額：<?php echo APP_CURRENCY_SYMBOL . number_format(abs($total_assets - ($total_liabilities + $total_equity)), DECIMAL_PLACES); ?>
                 </div>
                 <?php endif; ?>
             </div>

@@ -23,7 +23,7 @@
             <div class="stat-icon">💰</div>
             <div class="stat-content">
                 <div class="stat-label">本月交易金額</div>
-                <div class="stat-value"><?php echo CURRENCY_SYMBOL . number_format($month_amount, DECIMAL_PLACES); ?></div>
+                <div class="stat-value"><?php echo APP_CURRENCY_SYMBOL . number_format($month_amount, DECIMAL_PLACES); ?></div>
             </div>
         </div>
 
@@ -47,19 +47,19 @@
                     <table class="table">
                         <tr>
                             <td>總資產</td>
-                            <td class="text-right"><?php echo CURRENCY_SYMBOL . number_format($total_assets, DECIMAL_PLACES); ?></td>
+                            <td class="text-right"><?php echo APP_CURRENCY_SYMBOL . number_format($total_assets, DECIMAL_PLACES); ?></td>
                         </tr>
                         <tr>
                             <td>總負債</td>
-                            <td class="text-right"><?php echo CURRENCY_SYMBOL . number_format($total_liabilities, DECIMAL_PLACES); ?></td>
+                            <td class="text-right"><?php echo APP_CURRENCY_SYMBOL . number_format($total_liabilities, DECIMAL_PLACES); ?></td>
                         </tr>
                         <tr>
-                            <td>總權益</td>
-                            <td class="text-right"><?php echo CURRENCY_SYMBOL . number_format($total_equity, DECIMAL_PLACES); ?></td>
+                            <td>總權益（含本期損益）</td>
+                            <td class="text-right"><?php echo APP_CURRENCY_SYMBOL . number_format($total_equity, DECIMAL_PLACES); ?></td>
                         </tr>
                         <tr style="border-top: 2px solid #ddd; font-weight: bold;">
                             <td>資負合計</td>
-                            <td class="text-right"><?php echo CURRENCY_SYMBOL . number_format($total_liabilities + $total_equity, DECIMAL_PLACES); ?></td>
+                            <td class="text-right"><?php echo APP_CURRENCY_SYMBOL . number_format($total_liabilities + $total_equity, DECIMAL_PLACES); ?></td>
                         </tr>
                     </table>
                 </div>
@@ -110,8 +110,8 @@
                         <td><?php echo date(DISPLAY_DATE_FORMAT, strtotime($entry['entry_date'])); ?></td>
                         <td><?php echo htmlspecialchars($entry['debit_code'] . ' ' . $entry['debit_name']); ?></td>
                         <td><?php echo htmlspecialchars($entry['credit_code'] . ' ' . $entry['credit_name']); ?></td>
-                        <td class="text-right"><?php echo CURRENCY_SYMBOL . number_format($entry['amount'], DECIMAL_PLACES); ?></td>
-                        <td><?php echo htmlspecialchars(substr($entry['description'], 0, 20)); ?></td>
+                        <td class="text-right"><?php echo APP_CURRENCY_SYMBOL . number_format($entry['amount'], DECIMAL_PLACES); ?></td>
+                        <td><?php echo htmlspecialchars(mb_substr((string)$entry['description'], 0, 20)); ?></td>
                     </tr>
                     <?php endforeach; ?>
                 </tbody>

@@ -95,7 +95,9 @@ class AuthController {
         $new_password = $_POST['new_password'] ?? '';
         $confirm_password = $_POST['confirm_password'] ?? '';
 
-        if (empty($old_password) || empty($new_password) || empty($confirm_password)) {
+        if (DEMO_MODE && ($_SESSION['username'] ?? '') === DEMO_USERNAME) {
+            $this->errors[] = '示範帳號無法修改密碼';
+        } elseif (empty($old_password) || empty($new_password) || empty($confirm_password)) {
             $this->errors[] = '所有欄位都必填';
         } elseif ($new_password !== $confirm_password) {
             $this->errors[] = '新密碼和確認密碼不一致';

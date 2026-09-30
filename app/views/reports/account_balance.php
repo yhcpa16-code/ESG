@@ -31,7 +31,7 @@
                         $type = $account['account_type'];
                         if (isset($type_groups[$type])) {
                             $type_groups[$type]['accounts'][] = $account;
-                            $type_groups[$type]['total'] += $account['balance'];
+                            $type_groups[$type]['total'] += $account['natural_balance'];
                         }
                     }
 
@@ -47,12 +47,12 @@
                         <td><?php echo htmlspecialchars($account['account_code']); ?></td>
                         <td><?php echo htmlspecialchars($account['account_name']); ?></td>
                         <td><?php echo $group['name']; ?></td>
-                        <td class="text-right"><?php echo CURRENCY_SYMBOL . number_format($account['balance'], DECIMAL_PLACES); ?></td>
+                        <td class="text-right"><?php echo APP_CURRENCY_SYMBOL . number_format($account['natural_balance'], DECIMAL_PLACES); ?></td>
                     </tr>
                     <?php endforeach; ?>
                     <tr style="font-weight: bold; background: #f9f9f9;">
                         <td colspan="3"><?php echo $group['name']; ?>小計</td>
-                        <td class="text-right"><?php echo CURRENCY_SYMBOL . number_format($group['total'], DECIMAL_PLACES); ?></td>
+                        <td class="text-right"><?php echo APP_CURRENCY_SYMBOL . number_format($group['total'], DECIMAL_PLACES); ?></td>
                     </tr>
                     <?php
                         endif;
@@ -61,13 +61,12 @@
                 </tbody>
                 <tfoot>
                     <tr style="font-weight: bold; border-top: 2px solid #333;">
-                        <td colspan="3">總計</td>
-                        <td class="text-right">
-                            <?php
-                            $grand_total = array_sum(array_column($type_groups, 'total'));
-                            echo CURRENCY_SYMBOL . number_format($grand_total, DECIMAL_PLACES);
-                            ?>
-                        </td>
+                        <td colspan="3">借方科目合計（資產＋費用）</td>
+                        <td class="text-right"><?php echo APP_CURRENCY_SYMBOL . number_format($type_groups['asset']['total'] + $type_groups['expense']['total'], DECIMAL_PLACES); ?></td>
+                    </tr>
+                    <tr style="font-weight: bold;">
+                        <td colspan="3">貸方科目合計（負債＋權益＋收入）</td>
+                        <td class="text-right"><?php echo APP_CURRENCY_SYMBOL . number_format($type_groups['liability']['total'] + $type_groups['equity']['total'] + $type_groups['revenue']['total'], DECIMAL_PLACES); ?></td>
                     </tr>
                 </tfoot>
             </table>
@@ -77,23 +76,23 @@
                 <table class="table-bordered">
                     <tr>
                         <td>資產</td>
-                        <td class="text-right"><?php echo CURRENCY_SYMBOL . number_format($type_groups['asset']['total'], DECIMAL_PLACES); ?></td>
+                        <td class="text-right"><?php echo APP_CURRENCY_SYMBOL . number_format($type_groups['asset']['total'], DECIMAL_PLACES); ?></td>
                     </tr>
                     <tr>
                         <td>負債</td>
-                        <td class="text-right"><?php echo CURRENCY_SYMBOL . number_format($type_groups['liability']['total'], DECIMAL_PLACES); ?></td>
+                        <td class="text-right"><?php echo APP_CURRENCY_SYMBOL . number_format($type_groups['liability']['total'], DECIMAL_PLACES); ?></td>
                     </tr>
                     <tr>
                         <td>權益</td>
-                        <td class="text-right"><?php echo CURRENCY_SYMBOL . number_format($type_groups['equity']['total'], DECIMAL_PLACES); ?></td>
+                        <td class="text-right"><?php echo APP_CURRENCY_SYMBOL . number_format($type_groups['equity']['total'], DECIMAL_PLACES); ?></td>
                     </tr>
                     <tr>
                         <td>收入</td>
-                        <td class="text-right"><?php echo CURRENCY_SYMBOL . number_format($type_groups['revenue']['total'], DECIMAL_PLACES); ?></td>
+                        <td class="text-right"><?php echo APP_CURRENCY_SYMBOL . number_format($type_groups['revenue']['total'], DECIMAL_PLACES); ?></td>
                     </tr>
                     <tr>
                         <td>支出</td>
-                        <td class="text-right"><?php echo CURRENCY_SYMBOL . number_format($type_groups['expense']['total'], DECIMAL_PLACES); ?></td>
+                        <td class="text-right"><?php echo APP_CURRENCY_SYMBOL . number_format($type_groups['expense']['total'], DECIMAL_PLACES); ?></td>
                     </tr>
                 </table>
             </div>

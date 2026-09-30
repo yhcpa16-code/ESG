@@ -55,7 +55,7 @@ class DashboardController {
         $total_assets = 0;
         foreach ($all_accounts as $account) {
             if ($account['account_type'] === 'asset') {
-                $total_assets += $account['balance'];
+                $total_assets += $account['natural_balance'];
             }
         }
 
@@ -63,15 +63,17 @@ class DashboardController {
         $total_liabilities = 0;
         foreach ($all_accounts as $account) {
             if ($account['account_type'] === 'liability') {
-                $total_liabilities += $account['balance'];
+                $total_liabilities += $account['natural_balance'];
             }
         }
 
-        // 權益總額
+        // 權益總額（含尚未結轉的本期損益）
         $total_equity = 0;
         foreach ($all_accounts as $account) {
-            if ($account['account_type'] === 'equity') {
-                $total_equity += $account['balance'];
+            if (in_array($account['account_type'], ['equity', 'revenue'], true)) {
+                $total_equity += $account['natural_balance'];
+            } elseif ($account['account_type'] === 'expense') {
+                $total_equity -= $account['natural_balance'];
             }
         }
 

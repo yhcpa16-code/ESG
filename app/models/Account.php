@@ -9,12 +9,26 @@ class Account {
         $this->db = Database::getInstance();
     }
 
+    // balance 一律以「借方為正」儲存；資產、費用為借方科目，負債、權益、收入為貸方科目
+    public static function isDebitNature($type) {
+        return in_array($type, [ACCOUNT_TYPE_ASSET, ACCOUNT_TYPE_EXPENSE], true);
+    }
+
+    // 依科目正常餘額方向顯示的餘額（貸方科目取反號）
+    private static function withNaturalBalance($account) {
+        if ($account) {
+            $balance = (float)$account['balance'];
+            $account['natural_balance'] = self::isDebitNature($account['account_type']) ? $balance : -$balance;
+        }
+        return $account;
+    }
+
     /**
      * 根據ID取得科目
      */
     public function getAccountById($account_id) {
         $sql = "SELECT * FROM {accounts} WHERE account_id = ?";
-        return $this->db->fetchOne($sql, [$account_id]);
+        return self::withNaturalBalance($this->db->fetchOne($sql, [$account_id]));
     }
 
     /**
@@ -30,12 +44,10 @@ class Account {
      */
     public function getAll($type = null) {
         if ($type) {
-            $sql = "SELECT * FROM {accounts} WHERE account_type = ? ORDER BY account_code ASC";
-            return $this->db->fetchAll($sql, [$type]);
-        } else {
-            $sql = "SELECT * FROM {accounts} ORDER BY account_code ASC";
-            return $this->db->fetchAll($sql);
+            return $this->getByType($type);
         }
+        $sql = "SELECT * FROM {accounts} ORDER BY account_code ASC";
+        return array_map([self::class, 'withNaturalBalance'], $this->db->fetchAll($sql));
     }
 
     /**
@@ -43,7 +55,7 @@ class Account {
      */
     public function getByType($type) {
         $sql = "SELECT * FROM {accounts} WHERE account_type = ? ORDER BY account_code ASC";
-        return $this->db->fetchAll($sql, [$type]);
+        return array_map([self::class, 'withNaturalBalance'], $this->db->fetchAll($sql, [$type]));
     }
 
     /**

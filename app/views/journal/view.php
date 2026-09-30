@@ -34,7 +34,7 @@
                 <div class="detail-row">
                     <div class="detail-label">金額</div>
                     <div class="detail-value">
-                        <?php echo CURRENCY_SYMBOL . number_format($entry['amount'], DECIMAL_PLACES); ?>
+                        <?php echo APP_CURRENCY_SYMBOL . number_format($entry['amount'], DECIMAL_PLACES); ?>
                     </div>
                 </div>
 

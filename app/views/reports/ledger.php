@@ -41,8 +41,9 @@
                 </thead>
                 <tbody>
                     <?php
-                    $running_balance = $account['balance'];
-                    foreach ($entries as $entry):
+                    $running_balance = 0;
+                    $sign = Account::isDebitNature($account['account_type']) ? 1 : -1;
+                    foreach (array_reverse($entries) as $entry):
                         $is_debit = $entry['debit_account'] == $account_id;
                         $opposite_code = $is_debit ? $entry['credit_code'] : $entry['debit_code'];
                         $opposite_name = $is_debit ? $entry['credit_name'] : $entry['debit_name'];
@@ -51,21 +52,17 @@
                         <td><?php echo date(DISPLAY_DATE_FORMAT, strtotime($entry['entry_date'])); ?></td>
                         <td><?php echo htmlspecialchars($entry['voucher_no']); ?></td>
                         <td><?php echo htmlspecialchars($opposite_code . ' ' . $opposite_name); ?></td>
-                        <td><?php echo htmlspecialchars(substr($entry['description'], 0, 20)); ?></td>
+                        <td><?php echo htmlspecialchars(mb_substr((string)$entry['description'], 0, 20)); ?></td>
                         <td class="text-right">
-                            <?php echo $is_debit ? CURRENCY_SYMBOL . number_format($entry['amount'], DECIMAL_PLACES) : ''; ?>
+                            <?php echo $is_debit ? APP_CURRENCY_SYMBOL . number_format($entry['amount'], DECIMAL_PLACES) : ''; ?>
                         </td>
                         <td class="text-right">
-                            <?php echo !$is_debit ? CURRENCY_SYMBOL . number_format($entry['amount'], DECIMAL_PLACES) : ''; ?>
+                            <?php echo !$is_debit ? APP_CURRENCY_SYMBOL . number_format($entry['amount'], DECIMAL_PLACES) : ''; ?>
                         </td>
                         <td class="text-right">
                             <?php
-                            if ($is_debit) {
-                                $running_balance -= $entry['amount'];
-                            } else {
-                                $running_balance += $entry['amount'];
-                            }
-                            echo CURRENCY_SYMBOL . number_format($running_balance, DECIMAL_PLACES);
+                            $running_balance += ($is_debit ? 1 : -1) * $sign * $entry['amount'];
+                            echo APP_CURRENCY_SYMBOL . number_format($running_balance, DECIMAL_PLACES);
                             ?>
                         </td>
                     </tr>
@@ -74,7 +71,7 @@
                 <tfoot>
                     <tr style="font-weight: bold; border-top: 2px solid #333;">
                         <td colspan="6" class="text-right">期末餘額：</td>
-                        <td class="text-right"><?php echo CURRENCY_SYMBOL . number_format($account['balance'], DECIMAL_PLACES); ?></td>
+                        <td class="text-right"><?php echo APP_CURRENCY_SYMBOL . number_format($account['natural_balance'], DECIMAL_PLACES); ?></td>
                     </tr>
                 </tfoot>
             </table>

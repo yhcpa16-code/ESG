@@ -6,6 +6,13 @@
             <h3>修改密碼</h3>
         </div>
         <div class="card-body">
+            <?php foreach (['danger' => $this->getErrors(), 'success' => $this->getMessages()] as $type => $items): ?>
+                <?php if (!empty($items)): ?>
+                <div class="alert alert-<?php echo $type; ?> alert-static">
+                    <?php foreach ($items as $item): ?><p><?php echo htmlspecialchars($item); ?></p><?php endforeach; ?>
+                </div>
+                <?php endif; ?>
+            <?php endforeach; ?>
             <form method="POST" class="form">
                 <div class="form-group">
                     <label for="old_password">舊密碼 *</label>

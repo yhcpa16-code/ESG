@@ -43,6 +43,10 @@ date_default_timezone_set('Asia/Taipei');
 // 錯誤報告：正式環境（APP_DEBUG=false）不在網頁顯示錯誤細節，只寫入伺服器錯誤日誌
 defined('APP_DEBUG') || define('APP_DEBUG', true);
 defined('SHOW_DEMO_ACCOUNT') || define('SHOW_DEMO_ACCOUNT', APP_DEBUG);
+defined('DEMO_USERNAME') || define('DEMO_USERNAME', 'admin');
+defined('DEMO_PASSWORD') || define('DEMO_PASSWORD', 'admin123');
+// 公開示範站：顯示提示橫幅、示範帳號不可改密碼、不開放 AI 辨識
+defined('DEMO_MODE') || define('DEMO_MODE', false);
 error_reporting(E_ALL);
 ini_set('display_errors', APP_DEBUG ? '1' : '0');
 ini_set('log_errors', '1');
@@ -72,7 +76,7 @@ define('DATETIME_FORMAT', 'Y-m-d H:i:s');
 define('DISPLAY_DATE_FORMAT', 'Y年m月d日');
 
 // 金額格式
-define('CURRENCY_SYMBOL', 'NT$');
+define('APP_CURRENCY_SYMBOL', 'NT$');
 define('DECIMAL_PLACES', 2);
 
 // 分頁設定

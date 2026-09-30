@@ -24,14 +24,14 @@
                         <td class="text-right">
                             <?php
                             if (in_array($account['account_type'], ['asset', 'expense'])) {
-                                echo CURRENCY_SYMBOL . number_format($account['balance'], DECIMAL_PLACES);
+                                echo APP_CURRENCY_SYMBOL . number_format($account['natural_balance'], DECIMAL_PLACES);
                             }
                             ?>
                         </td>
                         <td class="text-right">
                             <?php
                             if (!in_array($account['account_type'], ['asset', 'expense'])) {
-                                echo CURRENCY_SYMBOL . number_format($account['balance'], DECIMAL_PLACES);
+                                echo APP_CURRENCY_SYMBOL . number_format($account['natural_balance'], DECIMAL_PLACES);
                             }
                             ?>
                         </td>
@@ -41,19 +41,19 @@
                 <tfoot>
                     <tr style="font-weight: bold; border-top: 2px solid #333;">
                         <td colspan="2">合計</td>
-                        <td class="text-right"><?php echo CURRENCY_SYMBOL . number_format($total_debit, DECIMAL_PLACES); ?></td>
-                        <td class="text-right"><?php echo CURRENCY_SYMBOL . number_format($total_credit, DECIMAL_PLACES); ?></td>
+                        <td class="text-right"><?php echo APP_CURRENCY_SYMBOL . number_format($total_debit, DECIMAL_PLACES); ?></td>
+                        <td class="text-right"><?php echo APP_CURRENCY_SYMBOL . number_format($total_credit, DECIMAL_PLACES); ?></td>
                     </tr>
                 </tfoot>
             </table>
 
-            <?php if ($total_debit == $total_credit): ?>
+            <?php if (abs($total_debit - $total_credit) < 0.005): ?>
             <div class="alert alert-success" style="margin-top: 20px;">
-                ✓ 借貸平衡：<?php echo CURRENCY_SYMBOL . number_format($total_debit, DECIMAL_PLACES); ?>
+                ✓ 借貸平衡：<?php echo APP_CURRENCY_SYMBOL . number_format($total_debit, DECIMAL_PLACES); ?>
             </div>
             <?php else: ?>
             <div class="alert alert-danger" style="margin-top: 20px;">
-                ✗ 借貸不平衡！差額：<?php echo CURRENCY_SYMBOL . number_format(abs($total_debit - $total_credit), DECIMAL_PLACES); ?>
+                ✗ 借貸不平衡！差額：<?php echo APP_CURRENCY_SYMBOL . number_format(abs($total_debit - $total_credit), DECIMAL_PLACES); ?>
             </div>
             <?php endif; ?>
         </div>
